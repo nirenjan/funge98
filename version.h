@@ -1,7 +1,7 @@
 /****************************************************************************
- * sysinfo.c
+ * version.h
  *
- * System information file for Funge98
+ * Version header file for Funge98
  *
  * Copyright (C) 2012 Nirenjan Krishnan
  ****************************************************************************
@@ -20,29 +20,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Funge98. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
+#ifndef _VERSION_H
+#define _VERSION_H
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
+/*
+ * When updating the version number in this file, make sure to update all
+ * the #define's so that they all match up.
+ */
+/* Binary name */
+#define BIN_NAME            "Funge98"
 
-#include "funge_const.h"
-
-/* Flags field */
-/* Cell size */
-/* Handprint */
 /* Version number */
-/* Operating paradigm */
-/* Path separator character */
-/* Number of dimensions */
-/* Current IP ID */
+#define VERSION_TAG         "v1.0a"
 
-void get_sysinfo(void)
-{
-    int32_t param;
-    int32_t pushed;
+/*
+ * Sysinfo version number - used by 'y' command
+ * Format - Major * 1000 + Minor * 100 + ord(Rev) - 0x60
+ * Eg. v1.0a -> Major = 1; Minor = 0; Rev = a -> 1001
+ */
+#define SYSINFO_VERSION             1001
 
-    // TODO: implement stack
-    // param = pop();
+/* Handprint - used by 'y' command */
+// TODO
+#define SYSINFO_HANDPRINT           0xfc29e981
 
-
-}
+#endif /* !defined _VERSION_H */
