@@ -28,14 +28,41 @@
 #include <stdlib.h>
 
 /*
- * Number of directions a vector can move. This is set to be up to 6:
- * +x, -x, +y, -y, +z, -z
+ * Number of directions a vector can move. This is set to be up to 4:
+ * +x, -x, +y, -y
  */
-#define DIRECTIONS 6
+#define DIRECTIONS  4
+
+/*
+ * Define the number of cells in X & Y direction per supercell
+ */
+#define X_SZ        128
+#define Y_SZ        128
 
 struct funge_mem_s {
     struct funge_mem_s *next[DIRECTIONS];
-    int32_t cell[X_SZ][Y_SZ][Z_SZ];
-}
+    int32_t start_x;
+    int32_t start_y;
+    int32_t flags;
+    int32_t pad;
+    int32_t cell[X_SZ][Y_SZ];
+};
+
+typedef struct funge_mem_s funge_mem_t;
+
+/*
+ * There's always at least one funge_mem_t structure. This is statically
+ * allocated to mem_root and corresponds to the first block of cells
+ * from (0, 0) to (127, 127)
+ */
+extern funge_mem_t mem_root;
+
+/* Public API functions */
+/* Initialize the funge memory manager */
+extern int32_t init_funge_mem(void);
+/* Get a value from funge memory */
+extern int32_t get_funge_mem(int32_t x, int32_t y, int32_t *val);
+/* Store a value into funge memory */
+extern int32_t put_funge_mem(int32_t x, int32_t y, int32_t *val);
 
 #endif /* !defined FUNGE_MEM_H */

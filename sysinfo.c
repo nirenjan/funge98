@@ -51,7 +51,7 @@
 #define SYSINFO_PATH_SEPARATOR      '/'
 
 /* Number of dimensions */
-#define SYSINFO_DIMENSIONS          3
+#define SYSINFO_DIMENSIONS          2
 
 /* Current IP ID */
 
