@@ -23,9 +23,8 @@
 #ifndef _FUNGE_EXTN_H
 #define _FUNGE_EXTN_H
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include "funge_fwd.h"
+#include "funge_const.h"
 
 /****************************************************************************
  * BrainFunge extensions - fingerprint mechanism
@@ -48,19 +47,17 @@ struct funge_extn_s {
     struct funge_extn_s *next;
     int32_t fingerprint;
     int32_t thread_id;
-    funge_extn_fn_t function;
+    funge_handler_fn_t function;
 };
 
 typedef struct funge_extn_s funge_extn_t;
 
 struct funge_extn_map_s {
     funge_extn_t extn_map[26];
-}
-
-typedef struct funge_extn_map_s funge_extn_map_t;
+};
 
 /* Public API */
-int32_t funge_extn_init(void);
+int32_t funge_extn_init(funge_thread_t *thread);
 
 int32_t funge_extn_handler(int32_t funge_char);
 

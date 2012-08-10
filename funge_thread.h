@@ -52,10 +52,8 @@ struct funge_thread_s {
     funge_vector_t storage_offset;
 
     funge_stack_t *stack;
-    funge_extn_t *extn;
+    funge_extn_map_t *extn;
 };
-
-typedef struct funge_thread_s funge_thread_t;
 
 /*
  * Every time a thread is switched in, set a global

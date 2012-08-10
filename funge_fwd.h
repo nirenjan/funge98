@@ -1,7 +1,7 @@
 /****************************************************************************
- * funge_const.h
+ * funge_fwd.h
  *
- * Constants header file for BrainFunge
+ * Forward declarations header file for BrainFunge
  *
  * Copyright (C) 2012 Nirenjan Krishnan
  ****************************************************************************
@@ -20,50 +20,36 @@
  * You should have received a copy of the GNU General Public License
  * along with BrainFunge. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-#ifndef _FUNGE_CONST_H
-#define _FUNGE_CONST_H
-
-#include "version.h"
+#ifndef _FUNGE_FWD_H
+#define _FUNGE_FWD_H
 
 /****************************************************************************
- * Interpreter constants
+ * funge_const.h
  ***************************************************************************/
-#define RC_OK                       0
-#define RC_MEM_INVALID_PARAMS       1
-#define RC_BAD_POINTER              2
-#define RC_OUT_OF_MEMORY            3
-#define RC_STACK_FULL               4
-#define RC_STACK_EMPTY              5
-#define RC_EXTENSION_EXISTS         6
-#define RC_OUT_OF_RANGE             7
 
 /****************************************************************************
- * BrainFunge language constants
+ * funge_extn.h
  ***************************************************************************/
-#define FUNGE_SPACE                 32
+typedef int32_t (*funge_handler_fn_t)(int32_t funge_char);
+struct funge_extn_map_s;
+typedef struct funge_extn_map_s funge_extn_map_t;
 
 /****************************************************************************
- * System information constants
+ * funge_mem.h
  ***************************************************************************/
-#define SYSINFO_FLAGS_CONCURRENT    0x1
-#define SYSINFO_FLAGS_IN_FILE       0x2
-#define SYSINFO_FLAGS_OUT_FILE      0x4
-#define SYSINFO_FLAGS_SYSEXEC       0x8
-#define SYSINFO_FLAGS_UNBUFF_IO     0x10
 
-/* Flags field */
-#define SYSINFO_FLAGS               0x0
+/****************************************************************************
+ * funge_stack.h
+ ***************************************************************************/
 
-/* Cell size */
-#define SYSINFO_CELL_SIZE           0x4
+/****************************************************************************
+ * funge_thread.h
+ ***************************************************************************/
+struct funge_thread_s;
+typedef struct funge_thread_s funge_thread_t;
 
-/* Operating paradigm */
-#define SYSINFO_OPERATING_PARADIGM  0   // Unavailable
+/****************************************************************************
+ * funge_vector.h
+ ***************************************************************************/
 
-/* Path separator character */
-#define SYSINFO_PATH_SEPARATOR      '/'
-
-/* Number of dimensions */
-#define SYSINFO_DIMENSIONS          2
-
-#endif /* !defined _FUNGE_CONST_H */
+#endif /* !defined _FUNGE_FWD_H */
