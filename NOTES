@@ -1,0 +1,80 @@
+Stack
+=====
+
+/****************************************************************************
+ * A Funge98 stack is defined like below:
+ *
+ *         stack hdr      stack cell     stack cell
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ * TOSS -> | | | | | -> | | | | ... -> | | | | ... -> ...
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ *          |
+ *          V
+ *         +-------+
+ * SOSS    | | | | | Next stack
+ *         +-------+
+ *          |
+ *          V
+ *          .
+ *          .
+ *          .
+ *         
+ ***************************************************************************/
+
+
+struct funge_stack_cell_s {
+    /* Pointer to the next stack cell in the same stack */
+    struct funge_stack_cell_s *next_stack_cell;
+
+    /* These are the actual values in the stack */
+    int32_t cell[STACK_SZ];
+};
+
+struct funge_stack_s {
+    /* Pointer to the next stack cell in the same stack */
+    struct funge_stack_cell_s *next_stack_cell;
+
+    /* Pointer to the next stack in the stack stack */
+    struct funge_stack_s *next_stack;
+
+    /*
+     * Index of the top entry in the current stack.
+     * This is NOT the index in the current stack cell.
+     * However, it's easy to compute the index by taking
+     * the bottom N bits (N = log2 STACK_SZ - 1) of this
+     * value. The remaining bits will tell you how many
+     * stack cells are used in the current stack.
+     * A negative value indicates that the stack is empty.
+     */
+    int32_t top;
+
+    /* This is the index of the stack in the stack stack, starting from 0 */
+    int32_t stack_no;
+};
+
+At stack init:
+next_stack_cell <- NULL
+next_stack      <- NULL
+top             <- (-1)
+stack_no        <- 0
+
+Push:
+1. if (top == 0x7FFFFFFF) return STACK FULL;
+2. Increment top
+3. index <- top & 1023
+4. if (index == 0), add new stack cell
+5. Store entry in index
+
+Pop
+1. If (top < 0) return STACK_EMPTY
+2. index <- top & 1023
+3. if (index == 1023), free top stack cell
+4. Return entry at index
+5. Decrement top
+
+Add new stack cell (*stack)
+1. Allocate temp stack cell
+2. Link to old stack cell
+3. Change old stack cell pointer to point to temp node
+
+

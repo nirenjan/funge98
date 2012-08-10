@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "funge_const.h"
 #include "funge_stack.h"
 
 /* Private functions */
@@ -36,7 +37,7 @@ static inline int32_t funge_stack_index(funge_stack_t *stack)
 /* Allocate a new stack cell */
 static int32_t funge_stack_alloc_cell(funge_stack_t *stack)
 {
-    funge_stack_t *temp;
+    funge_stack_cell_t *temp;
 
     temp = malloc(sizeof(funge_stack_t));
     if (!temp) {
@@ -45,53 +46,60 @@ static int32_t funge_stack_alloc_cell(funge_stack_t *stack)
     }
 
     /* Link the new cell to the stack */
-    temp->next_stack_cell = stack;
-    if (stack) {
-        temp->next_stack = stack->next_stack;
-        temp->top = stack->top;
-        temp->stack_no = stack->stack_no;
-    } else {
-        temp->next_stack = NULL;
-        temp->top = -1;
-        temp->stack_no = 0;
+    temp->next_stack_cell = stack->next_stack_cell;
+    stack->next_stack_cell = temp;
+
+    return RC_OK;
+}
+
+/* Free the top stack cell */
+static int32_t funge_stack_free_cell(funge_stack_t *stack)
+{
+    funge_stack_cell_t *temp;
+
+    temp = stack->next_stack_cell;
+    if (!temp) {
+        /* Should never get here */
+        return RC_BAD_POINTER;
     }
+
+    /* Link the next cell to the stack */
+    stack->next_stack_cell = temp->next_stack_cell;
     
-    *stack = temp;
+    free(temp);
 
     return RC_OK;
 }
 
 /* Public API functions */
 /* Push an element onto the stack */
-int32_t funge_stack_push(funge_stack_t **stack, int32_t *val)
+int32_t funge_stack_push(funge_stack_t *stack, int32_t *val)
 {
     int32_t index;
     int32_t rc;
 
-    if (!stack || !*stack || !val) {
+    if (!stack || !val) {
         return RC_BAD_POINTER;
     }
 
-    if (*stack->top >= 0x7FFFFFFF) {
+    if (stack->top >= 0x7FFFFFFF) {
         *val = FUNGE_SPACE;
         return RC_STACK_FULL;
     }
 
-    index = funge_stack_index(*stack);
+    stack->top++;
 
-    if (index == STACK_INDEX_MASK) {
+    index = funge_stack_index(stack);
+
+    if (index == 0) {
         /* Need to allocate a new stack cell */
-        rc = funge_stack_alloc_cell(*stack);
+        rc = funge_stack_alloc_cell(stack);
         if (rc) {
             return rc;
         }
-
-        index = funge_stack_index(*stack);
     }
-    index++;
 
-
-    *stack->cell[index] = *val;
+    stack->next_stack_cell->cell[index] = *val;
 
     return RC_OK;
 }
@@ -102,32 +110,70 @@ int32_t funge_stack_pop(funge_stack_t *stack, int32_t *val)
     int32_t index;
     int32_t rc;
 
-    if (!stack || !*stack || !val) {
+    if (!stack || !val) {
         return RC_BAD_POINTER;
     }
 
-    if (*stack->top < 0) {
+    if (stack->top < 0) {
         /* Empty stack */
         *val = FUNGE_SPACE;
         return RC_STACK_EMPTY;
     }
 
-    index = funge_stack_index(*stack);
+    index = funge_stack_index(stack);
 
-    if (index == 0) {
+    if (index == STACK_INDEX_MASK) {
         /* Need to free the top stack cell */
-        rc = funge_stack_free_cell(*stack);
+        rc = funge_stack_free_cell(stack);
         if (rc) {
+            *val = FUNGE_SPACE;
             return rc;
         }
-
-        index = funge_stack_index(*stack);
     }
-    index--;
 
-    *stack->cell[index] = *val;
+    *val = stack->next_stack_cell->cell[index];
+
+    stack->top--;
 
     return RC_OK;
     
 }
 
+/* Clear the stack of elements (only the TOSS) */
+int32_t funge_stack_clear(funge_stack_t *stack)
+{
+    funge_stack_cell_t *temp;
+
+    if (!stack) {
+        return RC_BAD_POINTER;
+    }
+
+    temp = stack->next_stack_cell;
+    stack->top = -1;
+
+    /* We want to free all stack cells but the last one */
+    while(temp->next_stack_cell) {
+        stack->next_stack_cell = temp->next_stack_cell;
+        free(temp);
+
+        temp = stack->next_stack_cell;
+    }
+
+    return RC_OK;
+}
+
+/* Initialize a thread's stack & stack stack */
+int32_t funge_stack_init(funge_stack_t *stack)
+{
+    if (!stack) {
+        return RC_BAD_POINTER;
+    }
+
+    /* Initialize pointers */
+    stack->next_stack_cell = NULL;
+    stack->next_stack = NULL;
+    stack->top = -1;
+    stack->stack_no = 0;
+
+    return funge_stack_alloc_cell(stack);
+}

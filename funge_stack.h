@@ -30,25 +30,20 @@
 /****************************************************************************
  * A Funge98 stack is defined like below:
  *
- *         stack cell     stack cell
- *         +-+-+-+----    +-+-+-+----
- * TOSS -> | | | | ... -> | | | | ... -> ...
- *         +-+-+-+----    +-+-+-+----
- *          |              |
- *          V              V
- *         +----------------+
- *         |   Next stack   |
- *         +----------------+
- *          |              |
- *          V              V
- *         +----------------+
- *         |   Next stack   |
- *         +----------------+
- *          |              |
- *          V              V
- *          .              .
- *          .              .
- *          .              .
+ *         stack hdr    stack cell     stack cell
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ * TOSS -> | | | | | -> | | | | ... -> | | | | ... -> ...
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ *          |
+ *          V
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ * SOSS -> | | | | | -> | | | | ... -> | | | | ... -> ...
+ *         +-+-+-+-+    +-+-+-+----    +-+-+-+----
+ *          |
+ *          V
+ *          .
+ *          .
+ *          .
  *         
  ***************************************************************************/
 
@@ -61,9 +56,19 @@
 /* Count shift */
 #define STACK_COUNT_SHIFT   10
 
+struct funge_stack_cell_s {
+    /* Pointer to the next stack cell in the same stack */
+    struct funge_stack_cell_s *next_stack_cell;
+
+    /* These are the actual values in the stack */
+    int32_t cell[STACK_SZ];
+};
+
+typedef struct funge_stack_cell_s funge_stack_cell_t;
+
 struct funge_stack_s {
     /* Pointer to the next stack cell in the same stack */
-    struct funge_stack_s *next_stack_cell;
+    struct funge_stack_cell_s *next_stack_cell;
 
     /* Pointer to the next stack in the stack stack */
     struct funge_stack_s *next_stack;
@@ -81,9 +86,6 @@ struct funge_stack_s {
 
     /* This is the index of the stack in the stack stack, starting from 0 */
     int32_t stack_no;
-
-    /* These are the actual values in the stack */
-    int32_t cell[STACK_SZ];
 };
 
 typedef struct funge_stack_s funge_stack_t;
@@ -94,5 +96,11 @@ extern int32_t funge_stack_push(funge_stack_t *stack, int32_t *val);
 
 /* Pop an element from the stack */
 extern int32_t funge_stack_pop(funge_stack_t *stack, int32_t *val);
+
+/* Clear the stack of elements (only the TOSS) */
+extern int32_t funge_stack_clear(funge_stack_t *stack);
+
+/* Initialize a thread's stack & stack stack */
+extern int32_t funge_stack_init(funge_stack_t *stack);
 
 #endif /* !defined _FUNGE_STACK_H */
