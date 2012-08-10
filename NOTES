@@ -1,3 +1,52 @@
+Extensions
+==========
+struct funge_extn_s {
+    struct funge_extn_s *next;
+    int32_t extn_id;
+    int32_t thread_id;
+    int32_t enabled_mask;
+
+    funge_function_t function[26];      
+
+    int32_t pad[2];
+};
+
+Each thread has a pointer to the extension structure. When thread is created,
+the pointer is NULL, indicating that no extensions are in place.
+
+When a new extension is loaded, a new funge_extn_t structure is created and
+is linked to the existing thread's extension chain. It then copies the function
+table from the old extension structure and updates it with only those functions
+that are applicable to the loaded extension.
+
+Say three fingerprints are implemented on your interpreter,
+
+* `E.G.` which implements `D` as 'Destroy' and `R` as 'Restore'
+* `TEST` which implements `S` as 'Send', `R` as 'Receive', and `E` as 'Encrypt'
+* `WORK` which implements `S` as 'Slice', `D` as 'Dice', `P` as 'Puree'
+
+With these, the Funge programmer ought to be able to make code like:
+
+`".G.E"4( ... "TSET"4( ... "KROW"4( ... S ... ) ... ) ... )`
+
+So the extension chain would be like this:
+WORK -> TEST -> E.G.
+
+Loading E.G. would create a new table with all function pointers pointing to 'r'
+but 'D' & 'R' would be updated accordingly.
+Loading TEST would copy the table from E.G., but override R with receive and add
+S & E functions.
+Loading WORK would copy the table from work, override S & D and add P.
+
+Unloading WORK would delete the structure, reverting the table to TEST
+
+When a function from 'A' to 'Z' is encountered by the current thread, it will
+call the extension handler, which in turn will call the correct extension
+function by examining the current thread's funge_extn_t pointer.
+
+When an extension is unloaded, the current funge_extn_t structure is freed and
+the thread's extension pointer is changed to point to the next funge_extn_t.
+
 Stack
 =====
 
