@@ -42,7 +42,31 @@ code space pointers so that they reside in the new available space. That
 is, if the old space is 256x256 and the instruction pointer is at (129,200),
 the new IP will be at (129 & 127, 200 & 127) or (1, 72)
 
----
+----
+
+## Data Space
+
+Data space in BrainFunge is stored in a stack which can hold upto 2147483648
+elements. Elements can be pushed on to the stack by any of the push digit
+commands and are popped off the stack by the arithmetic and logic instructions.
+
+### Stack Stack
+
+BrainFunge maintains a stack stack, that is, a stack of stacks. All stack
+operations operate on the top stack of the stack stack or TOSS. BrainFunge
+has a set of instructions to manipulate the stack stack.
+
+The stack immediately below the TOSS is the second stack of the stack stack
+or the SOSS.
+
+The `{` or Begin Block command pops a count `n` from the TOSS and pushes a new
+stack on the stack stack, that is, the old TOSS becomes the SOSS and the
+new stack becomes the new TOSS.
+
+If the count `n` is positive, the interpreter moves `n` elements from the SOSS
+to the TOSS. If the number of elements `k` on the SOSS is less than `n`, then
+`n`-`k` zeroes are pushed on to the TOSS. The order of elements is preserved
+between the TOSS & SOSS.
 
 ## Instruction Pointer
 
@@ -50,3 +74,4 @@ BrainFunge uses a thread of execution referred to in this document as the
 Instruction Pointer or IP. Each IP can move in any direction, and can also
 move in a non-cardinal direction.
 
+Each IP has it's own stack.
