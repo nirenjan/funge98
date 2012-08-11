@@ -44,3 +44,9 @@ the new IP will be at (129 & 127, 200 & 127) or (1, 72)
 
 ---
 
+## Instruction Pointer
+
+BrainFunge uses a thread of execution referred to in this document as the
+Instruction Pointer or IP. Each IP can move in any direction, and can also
+move in a non-cardinal direction.
+
