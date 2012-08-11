@@ -30,11 +30,11 @@ space using the instructions XXX and XXX, which increase and decrease
 the usable code space. Increasing code space will create 3 additional
 regions as shown in the diagram below.
 
- +-+    +-+-+
- |0| -> |0|1|
- +-+    +-+-+
-        |2|3|
-        +-+-+
+    +-+    +-+-+
+    |0| -> |0|1|
+    +-+    +-+-+
+           |2|3|
+           +-+-+
 
 Decreasing has a more interesting behaviour. Not only will it reduce the
 usable code space to 1/4th of the original space, it will also adjust the
