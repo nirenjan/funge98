@@ -26,10 +26,15 @@
 #include "version.h"
 
 /****************************************************************************
+ * Compiler constants
+ ***************************************************************************/
+#define UNUSED  __attribute__((unused))
+
+/****************************************************************************
  * Interpreter constants
  ***************************************************************************/
 #define RC_OK                       0
-#define RC_MEM_INVALID_PARAMS       1
+#define RC_INVALID_PARAMS           1
 #define RC_BAD_POINTER              2
 #define RC_OUT_OF_MEMORY            3
 #define RC_STACK_FULL               4

@@ -29,6 +29,11 @@
 
 typedef struct funge_decode_s funge_decode_t;
 
+static int32_t funge_nop(int32_t funge_char)
+{
+    return RC_OK;
+}
+
 static int32_t funge_nop_space(int32_t funge_char)
 {
     return RC_OK;
@@ -51,16 +56,16 @@ static const funge_handler_fn_t decode_array[] = {
     [0x2D] = &funge_subtract,           // -
     [0x2E] = &funge_output_integer,     // .
     [0x2F] = &funge_divide,             // /
-    [0x30] = &funge_push_digit,         // 0
-    [0x31] = &funge_push_digit,         // 1
-    [0x32] = &funge_push_digit,         // 2
-    [0x33] = &funge_push_digit,         // 3
-    [0x34] = &funge_push_digit,         // 4
-    [0x35] = &funge_push_digit,         // 5
-    [0x36] = &funge_push_digit,         // 6
-    [0x37] = &funge_push_digit,         // 7
-    [0x38] = &funge_push_digit,         // 8
-    [0x39] = &funge_push_digit,         // 9
+    [0x30] = &funge_stack_push_digit,   // 0
+    [0x31] = &funge_stack_push_digit,   // 1
+    [0x32] = &funge_stack_push_digit,   // 2
+    [0x33] = &funge_stack_push_digit,   // 3
+    [0x34] = &funge_stack_push_digit,   // 4
+    [0x35] = &funge_stack_push_digit,   // 5
+    [0x36] = &funge_stack_push_digit,   // 6
+    [0x37] = &funge_stack_push_digit,   // 7
+    [0x38] = &funge_stack_push_digit,   // 8
+    [0x39] = &funge_stack_push_digit,   // 9
     [0x3A] = &funge_stack_duplicate,    // :
     [0x3B] = &funge_thread_skip_code,   // ;
     [0x3C] = &funge_thread_direction,   // <
@@ -100,19 +105,19 @@ static const funge_handler_fn_t decode_array[] = {
     [0x5E] = &funge_thread_direction,   // ^
     [0x5F] = &funge_thread_direction,   // _
     [0x60] = &funge_stack_greater_than, // `
-    [0x61] = &funge_push_digit,         // a
-    [0x62] = &funge_push_digit,         // b
-    [0x63] = &funge_push_digit,         // c
-    [0x64] = &funge_push_digit,         // d
-    [0x65] = &funge_push_digit,         // e
-    [0x66] = &funge_push_digit,         // f
+    [0x61] = &funge_stack_push_digit,   // a
+    [0x62] = &funge_stack_push_digit,   // b
+    [0x63] = &funge_stack_push_digit,   // c
+    [0x64] = &funge_stack_push_digit,   // d
+    [0x65] = &funge_stack_push_digit,   // e
+    [0x66] = &funge_stack_push_digit,   // f
     [0x67] = &funge_get_funge_space,    // g
-    [0x68] = &funge_direction,          // h
+    [0x68] = &funge_thread_direction,   // h
     [0x69] = &funge_system_input_file,  // i
-    [0x6A] = &funge_direction,          // j
+    [0x6A] = &funge_thread_direction,   // j
     [0x6B] = &funge_iterate,            // k
-    [0x6C] = &funge_direction,          // l
-    [0x6D] = &funge_direction,          // m
+    [0x6C] = &funge_thread_direction,   // l
+    [0x6D] = &funge_thread_direction,   // m
     [0x6E] = &funge_stack_clear,        // n
     [0x6F] = &funge_system_output_file, // o
     [0x70] = &funge_put_funge_space,    // p

@@ -83,7 +83,6 @@ int32_t funge_stack_push(funge_stack_t *stack, int32_t *val)
     }
 
     if (stack->top >= 0x7FFFFFFF) {
-        *val = FUNGE_SPACE;
         return RC_STACK_FULL;
     }
 
@@ -116,7 +115,7 @@ int32_t funge_stack_pop(funge_stack_t *stack, int32_t *val)
 
     if (stack->top < 0) {
         /* Empty stack */
-        *val = FUNGE_SPACE;
+        *val = 0;
         return RC_STACK_EMPTY;
     }
 
@@ -126,7 +125,7 @@ int32_t funge_stack_pop(funge_stack_t *stack, int32_t *val)
         /* Need to free the top stack cell */
         rc = funge_stack_free_cell(stack);
         if (rc) {
-            *val = FUNGE_SPACE;
+            *val = 0;
             return rc;
         }
     }
