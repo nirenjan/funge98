@@ -24,13 +24,19 @@
 CC=gcc
 CFLAGS=-Wall -Werror
 
-all: funge_stack.o funge_extn.o
+HEADERS= funge_const.h funge_fwd.h funge_extn.h funge_mem.h funge_stack.h \
+         funge_thread.h funge_vector.h version.h
 
-funge_stack.o: funge_stack.c funge_stack.h funge_const.h funge_fwd.h
+all: funge_stack.o funge_extn.o funge_thread.o
+
+funge_stack.o: funge_stack.c $(HEADERS)
 	$(CC) $(CFLAGS) -c funge_stack.c
 
-funge_extn.o: funge_extn.c funge_extn.h funge_thread.h funge_const.h funge_fwd.h
+funge_extn.o: funge_extn.c $(HEADERS)
 	$(CC) $(CFLAGS) -c funge_extn.c
+
+funge_thread.o: funge_thread.c $(HEADERS)
+	$(CC) $(CFLAGS) -c funge_thread.c
 
 clean:
 	rm -rfv *.o

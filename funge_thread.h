@@ -37,22 +37,23 @@
 
 struct funge_thread_s {
     struct funge_thread_s *next;
+    struct funge_thread_s *prev;
     int32_t thread_id;
-    int32_t team_id;
-    int32_t flags;
+    int32_t parent_id;
 
+    int32_t flags;
     int32_t create_epoch;
     int32_t create_time;
     int32_t uptime;
-    int32_t del_time;
 
     funge_vector_t ip;
     funge_vector_t delta;
 
     funge_vector_t storage_offset;
-
-    funge_stack_t *stack;
+    int32_t team_id;
     funge_extn_map_t *extn;
+
+    funge_stack_t stack;
 };
 
 /*
