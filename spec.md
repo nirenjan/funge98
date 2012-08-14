@@ -4,7 +4,7 @@ BrainFunge is a fungeoid inspired by Befunge-93 and the Funge-98
 specification. BrainFunge is a programming language whose programs
 are represented in 2 dimensions in Cartesian space.
 
------
+----
 
 # The BrainFunge Virtual Machine
 ## Code and Data
@@ -74,4 +74,13 @@ BrainFunge uses a thread of execution referred to in this document as the
 Instruction Pointer or IP. Each IP can move in any direction, and can also
 move in a non-cardinal direction.
 
-Each IP has it's own stack.
+BrainFunge allows multiple threads (up to 1024) to exist simultaneously.
+At the start of any BrainFunge program, only one thread exists and starts
+at (0, 0) and is moving east (1, 0). However, if the currently running
+thread encounters a fork instruction, a new thread is created with an
+instruction pointer, stack and storage offset identical to the original
+thread. The delta of the new thread is however reversed from that of the
+original thread. The new thread is inserted into the thread list so that
+it executes before the original thread.
+
+----
