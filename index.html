@@ -179,147 +179,138 @@ suggestions and in other aspects of authorship.</p>
 <p align="right">Steve Furber<br />March 2000</p>
 
 <h2>An Introduction to Processor Design</h2>
- 
-   
-Summary of chapter contents 
-The design of a general-purpose processor, in common with most engineering 
-endeavours, requires the careful consideration of many trade-offs and compro-
-mises. In this chapter we will look at the basic principles of processor instruction 
+
+<h3>Summary of chapter contents</h3>
+<p>The design of a general-purpose processor, in common with most engineering 
+endeavours, requires the careful consideration of many trade-offs and compromises.
+In this chapter we will look at the basic principles of processor instruction 
 set and logic design and the techniques available to the designer to help achieve 
-the design objectives. 
-Abstraction is fundamental to understanding complex computers. This chapter 
+the design objectives.</p>
+<p>Abstraction is fundamental to understanding complex computers. This chapter 
 introduces the abstractions which are employed by computer hardware designers, 
 of which the most important is the logic gate. The design of a simple processor is 
 presented, from the instruction set, through a register transfer level description, 
-down to logic gates. 
-The ideas behind the <i>Reduced Instruction Set Computer </i>(RISC) originated in proc-
-essor research programmes at Stanford and Berkeley universities around 1980, though 
+down to logic gates.</p>
+<p>The ideas behind the <i>Reduced Instruction Set Computer </i>(RISC) originated in
+processor research programmes at Stanford and Berkeley universities around 1980, though 
 some of the central ideas can be traced back to earlier machines. In this chapter we look 
 at the thinking that led to the RISC movement and consequently influenced the design of 
-the ARM processor which is the subject of the following chapters. 
-With the rapid development of markets for portable computer-based products, 
+the ARM processor which is the subject of the following chapters. </p>
+<p>With the rapid development of markets for portable computer-based products, 
 the power consumption of digital circuits is of increasing importance. At the end of 
 the chapter we will look at the principles of low-power high-performance design. 
-1 
-
-<A name=12></a>2 
-<b>An Introduction to Processor Design</b> 
-1.1      Processor architecture and organization 
-All modern general-purpose computers employ the principles of the <i>stored-program </i>
-<i>digital computer. </i>The stored-program concept originated from the Princeton Insti-
-tute of Advanced Studies in the 1940s and was first implemented in the 'Baby' 
-machine which first ran in June 1948 at the University of Manchester in England. 
-Fifty years of development have resulted in a spectacular increase in the perform-
-ance of processors and an equally spectacular reduction in their cost. Over this period 
-of relentless progress in the cost-effectiveness of computers, the principles of oper-
-ation have changed remarkably little. Most of the improvements have resulted from 
-advances in the technology of electronics, moving from valves (vacuum tubes) to indi-
-vidual transistors, to integrated circuits (ICs) incorporating several bipolar transistors 
-and then through generations of IC technology leading to today's very large scale inte-
-grated (VLSI) circuits delivering millions of field-effect transistors on a single chip. 
+ 
+<h3>Processor architecture and organization</h3>
+<p>All modern general-purpose computers employ the principles of the <i>stored-program </i>
+<i>digital computer. </i>The stored-program concept originated from the Princeton Institute
+of Advanced Studies in the 1940s and was first implemented in the 'Baby' 
+machine which first ran in June 1948 at the University of Manchester in England. </p>
+<p>Fifty years of development have resulted in a spectacular increase in the performance
+of processors and an equally spectacular reduction in their cost. Over this period 
+of relentless progress in the cost-effectiveness of computers, the principles of operation
+have changed remarkably little. Most of the improvements have resulted from 
+advances in the technology of electronics, moving from valves (vacuum tubes) to individual
+transistors, to integrated circuits (ICs) incorporating several bipolar transistors 
+and then through generations of IC technology leading to today's very large scale integrated
+(VLSI) circuits delivering millions of field-effect transistors on a single chip. 
 As transistors get smaller they get cheaper, faster, and consume less power. This 
 win-win scenario has carried the computer industry forward for the past three decades, 
-and will continue to do so at least for the next few years. 
-However, not all of the progress over the past 50 years has come from advances in 
+and will continue to do so at least for the next few years. </p>
+<p>However, not all of the progress over the past 50 years has come from advances in 
 electronics technology. There have also been occasions when a new insight into the 
 way that technology is employed has made a significant contribution. These insights 
 are described under the headings of computer architecture and computer organization, 
-where we will work with the following interpretations of these terms: 
-Computer 
-•  Computer architecture describes the user's view of the computer. The instruction 
-architecture 
+where we will work with the following interpretations of these terms: </p>
+
+<h4>Computer architecture</h4>
+<p>Computer architecture describes the user's view of the computer. The instruction 
 set, visible registers, memory management table structures and exception han 
-dling model are all part of the architecture. 
-Computer 
-•  Computer  organization  describes  the  user-invisible   implementation  
-organization 
+dling model are all part of the architecture. </p>
+<h4>Computer organization</h4> 
+<p>Computer  organization  describes  the  user-invisible   implementation  
 of the 
 architecture. The pipeline structure,    transparent cache, table-walking 
 hardware 
-and translation look-aside buffer are all aspects of the organization. 
-Amongst the advances in these aspects of the design of computers, the introduction 
+and translation look-aside buffer are all aspects of the organization. </p>
+<p>Amongst the advances in these aspects of the design of computers, the introduction 
 of virtual memory in the early 1960s, of transparent cache memories, of pipelining 
 and so on, have all been milestones in the evolution of computers. The RISC idea 
 ranks amongst these advances, offering a significant shift in the balance of forces 
-What is a 
-which determines the cost-effectiveness of computer technology. 
-processor? 
-A general-purpose processor is a finite-state automaton that executes instructions held 
-in a memory. The state of the system is defined by the values held in the memory loca-
-tions together with the values held in certain registers within the processor itself (see 
+which determines the cost-effectiveness of computer technology. </p>
+
+<h4>What is a processor? </h4>
+<p>A general-purpose processor is a finite-state automaton that executes instructions held 
+in a memory. The state of the system is defined by the values held in the memory locations
+together with the values held in certain registers within the processor itself (see 
 Figure 1.1 on page 3; the hexadecimal notation for the memory addresses is explained 
 in Section 6.2 on page 153). Each instruction defines a particular way the total state 
-should change and it also defines which instruction should be executed next. 
+should change and it also defines which instruction should be executed next. </p>
 
-<A name=13></a><IMG src="index-13_1.png">
-<b>Abstraction in hardware design</b> 
-3 
- 
-Figure 1.1        The state in a stored-program digital computer. 
-The Stored- 
-The <b>stored-program </b>digital computer keeps its instructions and data in the same 
-program 
+<p><IMG src="index-13_1.png"></p>
+<p>Figure 1.1        The state in a stored-program digital computer. </p>
+
+<h4>The Stored-program Computer</h4> 
+<p>The <b>stored-program </b>digital computer keeps its instructions and data in the same 
 memory system, allowing the instructions to be treated as data when necessary. This 
-Computer 
 enables the processor itself to generate instructions which it can subsequently execute. 
-Although programs that do this at a fine granularity <b>(self-modifying </b>code) are gener-
-ally considered bad form these days since they are very difficult to debug, use at a 
+Although programs that do this at a fine granularity <b>(self-modifying </b>code) are generally
+considered bad form these days since they are very difficult to debug, use at a 
 coarser granularity is fundamental to the way most computers operate. Whenever a 
 computer loads in a new program from disk (overwriting an old program) and then 
-executes it the computer is employing this ability to change its own program. 
-C o mp u t e r  
-Because of its programmability a stored-program digital computer is <b>universal,</b> 
-applications 
-which means that it can undertake any task that can be described by a suitable algo- 
-rithm. Sometimes this is reflected by its configuration as a desktop machine where 
+executes it the computer is employing this ability to change its own program. </p>
+
+<h4>Computer applications</h4>
+<p>Because of its programmability a stored-program digital computer is <b>universal,</b> 
+which means that it can undertake any task that can be described by a suitable algorithm.
+Sometimes this is reflected by its configuration as a desktop machine where 
 the user runs different programs at different times, but sometimes it is reflected by 
 the same processor being used in a range of different applications, each with a fixed 
 program. Such applications are characteristically embedded into products such as 
-mobile telephones, automotive engine-management systems, and so on. 
-1.2   Abstraction in hardware design 
-Computers are very complex pieces of equipment that operate at very high speeds. A 
+mobile telephones, automotive engine-management systems, and so on. </p>
+
+<h3>Abstraction in hardware design</h3>
+<p>Computers are very complex pieces of equipment that operate at very high speeds. A 
 modern microprocessor may be built from several million transistors each of which 
 can switch a hundred million times a second. Watch a document scroll up the screen 
-
-<A name=14></a><IMG src="index-14_1.png">
-4 
-<b>An Introduction to Processor Design</b> 
 on a desktop PC or workstation and try to imagine how a hundred million million 
 transistor switching actions are used in each second of that movement. Now consider 
 that every one of those switching actions is, in some sense, the consequence of a 
 deliberate design decision. None of them is random or uncontrolled; indeed, a single 
 error amongst those transitions is likely to cause the machine to collapse into a useless 
-state. How can such complex systems be designed to operate so reliably? 
-Transistors 
-A clue to the answer may be found in the question itself. We have described the oper- 
-ation of the computer in terms of transistors, but what is a transistor? It is a curious 
-structure composed from carefully chosen chemical substances with complex electri-
-cal properties that can only be understood by reference to the theory of quantum 
+state. How can such complex systems be designed to operate so reliably?</p> 
+
+<h4>Transistors</h4>
+<p>A clue to the answer may be found in the question itself. We have described the operation
+of the computer in terms of transistors, but what is a transistor? It is a curious 
+structure composed from carefully chosen chemical substances with complex electrical
+properties that can only be understood by reference to the theory of quantum 
 mechanics, where strange subatomic particles sometimes behave like waves and can 
 only be described in terms of probabilities. Yet the gross behaviour of a transistor can 
 be described, without reference to quantum mechanics, as a set of equations that relate 
 the voltages on its terminals to the current that flows though it. These equations 
-<b>abstract </b>the essential behaviour of the device from its underlying physics. 
-Logic gates 
-The equations that describe the behaviour of a transistor are still fairly complex. 
+<b>abstract </b>the essential behaviour of the device from its underlying physics. </p>
+
+<h4>Logic gates</h4>
+<p>The equations that describe the behaviour of a transistor are still fairly complex. 
 When a group of transistors is wired together in a particular structure, such as the 
 CMOS (Complementary Metal Oxide Semiconductor) NAND gate shown in 
-Figure 1.2, the behaviour of the group has a particularly simple description. 
-If each of the input wires <i>(A </i>and B) is held at a voltage which is either near to <i>Vdd </i>
+Figure 1.2, the behaviour of the group has a particularly simple description. </p>
+<p>If each of the input wires <i>(A </i>and B) is held at a voltage which is either near to <i>Vdd </i>
 or near to <i>Vss, </i>the output will will also be near to <i>Vdd </i>or <i>Vss </i>according to the follow-
-ing rules: 
-•  If <i>A </i>and <i>B </i>are both near to <i>Vdd, </i>the output will be near to <i>Vss.</i> 
-•  If either <i>A</i> or <i>B </i>(or both) is near to <i>Vss, </i>the output will be near to <i>Vdd.</i> 
+ing rules: </p>
+<ul>
+<li>If <i>A </i>and <i>B </i>are both near to <i>Vdd, </i>the output will be near to <i>Vss.</i> </li>
+<li>If either <i>A</i> or <i>B </i>(or both) is near to <i>Vss, </i>the output will be near to <i>Vdd.</i> </li>
+</ul>
  
-<b>Figure 1.2      </b>The transistor circuit of a static 2-input CMOS NAND gate. 
 
-<A name=15></a><IMG src="index-15_1.png">
-<b>Abstraction in hardware design</b> 
-5 
-With a bit of care we can define what is meant by 'near to' in these rules, and then 
+<p><IMG src="index-15_1.png"></p>
+<p><b>Figure 1.2      </b>The transistor circuit of a static 2-input CMOS NAND gate. </p>
+
+<p>With a bit of care we can define what is meant by 'near to' in these rules, and then 
 associate the meaning <b>true </b>with a value near to <i>Vdd </i>and <b>false </b>with a value near to 
-<i>Vss. </i>The circuit is then an implementation of the NAND Boolean logic function: 
-<i>output = —(A^B)</i> 
+<i>Vss. </i>The circuit is then an implementation of the NAND Boolean logic function: </p>
+<i>output = ~(A^B)</i> 
 Equation 1 
    
 Although there is a lot of engineering design involved in turning four transistors 
